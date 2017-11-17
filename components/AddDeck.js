@@ -30,7 +30,7 @@ class AddDeck extends Component {
 
     this.props.dispatch(addDeck(title))
 
-    this.props.navigation.navigate('DeckList')
+    this.props.navigation.navigate('DeckDetail', { deckName : title })
 
     clearLocalNotification().then(setLocalNotification)
   }
