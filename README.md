@@ -1,5 +1,5 @@
 # UdaciCards
-Quiz App (Allow user to create deck and add card to a given deck)
+A Flash Card App (Allow user to create deck and add card to a given deck)
 
 ## Prerequisite
 You need to have nodejs and npm install on your computer to run the project. If not you can download them using this [link](https://nodejs.org/en/download/)
