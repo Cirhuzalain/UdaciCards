@@ -32,7 +32,7 @@ class AddDeck extends Component {
 
     this.props.navigation.navigate('DeckList')
 
-    clearLocalNotification().then(setLocalNotification)
+    
   }
 
   render(){
