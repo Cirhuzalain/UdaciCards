@@ -18,9 +18,13 @@ function createNotification(){
       sticky : false,
       vibrate : true,
       priority : 'high'
+    },
+    ios : {
+      sound : true
     }
   }
 }
+
 
 export function setLocalNotification(){
   AsyncStorage.getItem(NOTIFICATION_KEY)
@@ -39,11 +43,9 @@ export function setLocalNotification(){
 
                 let isStudy = false
                 let today = new Date()
-                let cardDate = null
 
                 for (const card of cardDeck){
-                  cardDate = new Date(card.timestamp)
-                  if(cardDate.getDate() === today.getDate()){
+                  if(card.timestamp === today.getDate()){
                     isStudy = true
                   }
                 }
@@ -52,8 +54,7 @@ export function setLocalNotification(){
                   Notifications.scheduleLocalNotificationAsync(
                     createNotification(),
                     {
-                      time: today,
-                      repeat: 'day',
+                      time: today
                     }
                   )
 

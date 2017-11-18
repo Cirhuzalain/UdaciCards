@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, KeyboardAvoidingView } from 'react-native'
 import { Container, Header, Content, Form, Item, Input, Button, Label } from 'native-base'
 import { addCardToDeck } from '../utils/db'
 import { addCard } from '../actions'
@@ -29,11 +29,11 @@ class AddDeckCard extends Component {
     if (question.length < 1 || answer.length < 1){
       alert('Short question or Short Answer (> 1 character )')
     }
-
+    const today = new Date().getDate()
     const card = {
       question : question,
       answer : answer,
-      timestamp : new Date().getTime()
+      timestamp : today
     }
 
     addCardToDeck(this.deckName, card)
@@ -46,19 +46,21 @@ class AddDeckCard extends Component {
     return (
       <Container>
         <Content>
-          <Form style={[styles.center, {margin : 10}]}>
-            <Item floatingLabel>
-              <Label>Question</Label>
-              <Input onChangeText={(question) => this.setState({question})} />
-            </Item>
-            <Item floatingLabel>
-              <Label>Answer</Label>
-              <Input onChangeText={(answer) => this.setState({answer})} />
-            </Item>
-            <Button block onPress={this.submit}>
-              <Text style={{ color : '#fff' }}>Submit</Text>
-            </Button>
-          </Form>
+          <KeyboardAvoidingView>
+            <Form style={[styles.center, {margin : 10}]}>
+              <Item floatingLabel>
+                <Label>Question</Label>
+                <Input onChangeText={(question) => this.setState({question})} />
+              </Item>
+              <Item floatingLabel>
+                <Label>Answer</Label>
+                <Input onChangeText={(answer) => this.setState({answer})} />
+              </Item>
+              <Button block onPress={this.submit}>
+                <Text style={{ color : '#fff' }}>Submit</Text>
+              </Button>
+            </Form>
+          </KeyboardAvoidingView>
         </Content>
       </Container>
     )

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, Text } from 'react-native'
+import {View, Text, KeyboardAvoidingView } from 'react-native'
 import {Container, Header, Content, Form, Item, Input, Button, Label} from 'native-base'
 import { addDeck } from '../actions'
 import { saveDeckTitle } from '../utils/db'
@@ -39,15 +39,17 @@ class AddDeck extends Component {
     return (
       <Container>
         <Content>
-          <Form style={[styles.center, {margin : 20}]}>
-            <Item floatingLabel>
-              <Label>Deck Title</Label>
-              <Input onChangeText={(text) => this.setState({title : text}) } />
-            </Item>
-            <Button block onPress={this.submit}>
-              <Text style={{ color : '#fff' }}>Submit</Text>
-            </Button>
-          </Form>
+          <KeyboardAvoidingView>
+            <Form style={[styles.center, {margin : 20}]}>
+              <Item floatingLabel>
+                <Label>Deck Title</Label>
+                <Input onChangeText={(text) => this.setState({title : text}) } />
+              </Item>
+              <Button block onPress={this.submit}>
+                <Text style={{ color : '#fff' }}>Submit</Text>
+              </Button>
+            </Form>
+          </KeyboardAvoidingView>
         </Content>
       </Container>
     )

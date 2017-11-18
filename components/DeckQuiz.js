@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, Text, Animated, Alert } from 'react-native'
+import {View, Text, Animated, Alert, ScrollView } from 'react-native'
 import { Card, CardItem, DeckSwiper, Container, Body, Button } from 'native-base'
 import { connect } from 'react-redux'
 import styles from './styles'
@@ -13,6 +13,7 @@ class DeckQuiz extends Component {
     this.state = {
       answer : false,
       attempt : false,
+      isEnd : false,
       card : 0,
       score : 0,
       bounceValue: new Animated.Value(1)
@@ -69,14 +70,7 @@ class DeckQuiz extends Component {
 
   newQuiz = (container) => {
     return function(e){
-      container.state = {
-        answer : false,
-        attempt : false,
-        card : 0,
-        score : 0,
-        bounceValue: new Animated.Value(1)
-      }
-      container.setQuestion()
+      container.props.navigation.navigate('DeckQuiz', {deckName : container.deckName})
     }
   }
 
@@ -90,16 +84,39 @@ class DeckQuiz extends Component {
     this.state.card >= this.deckInfo.length ? this.setState({card : 1}) : this.setState({card : this.state.card + 1 })
     this.setState({answer : false})
     if (this.state.card == this.deckInfo.questions.length -1){
+      this.setState({isEnd : true, card : 0})
+    }
+  }
 
+  showQuizResult = () => {
+    if (this.state.isEnd){
       if(this.state.attempt){
-        Alert.alert('Quiz Result',
-                    `You've reached the end of the quiz, You've got : ${this.state.score} / ${this.deckInfo.questions.length}`,
-                    [{text : 'Restart Quiz', onPress : this.newQuiz(this)},
-                     {text : 'Back to Deck', onPress : this.backToDeck(this)}])
-      }else{
-        alert('You have reached the end of the quiz and you did not answered to any question')
+        return (
+          <View style={{flex : 1, marginTop : 10}}>
+            <Text style={{ fontSize : 15 }}>
+              You have reached the end of the quiz, You have got : {this.state.score} / {this.deckInfo.questions.length}
+            </Text>
+            <Button block style={{ margin : 15 }} onPress={this.newQuiz(this)}>
+              <Text style={{ color : '#fff' }}>Restart Quiz</Text>
+            </Button>
+            <Button block style={{ margin : 15 }} onPress={this.backToDeck(this)}>
+              <Text style={{ color : '#fff' }}>Back to Deck</Text>
+            </Button>
+          </View>
+        )
+      } else {
+        return (
+          <Text style={{ fontSize : 10 }}>You have reached the end of the quiz and you did not answered to any question</Text>
+        )
       }
-      this.setState({card : 0, score : 0})
+    }
+  }
+
+  showProgress = () => {
+    if(this.state.attempt){
+      return (
+        <Text style={{ fontSize : 15 }}>{`Result : ${this.state.score} / ${this.deckInfo.questions.length}`}</Text>
+      )
     }
   }
 
@@ -125,39 +142,43 @@ class DeckQuiz extends Component {
       )
     }
     return (
-      <Container>
-        <View style={{ margin : 30 }}>
-          <DeckSwiper
-            onSwipeLeft={this.swipe}
-            onSwipeRight={this.swipe}
-            dataSource={this.deckInfo.questions}
-            renderItem={ item =>
-              <Card style={{elevation : 3, padding : 30}}>
-                <CardItem cardBody>
-                  <Body style={styles.center}>
-                    <Text style={{ fontSize : 15 }}>{`${this.state.card % this.deckInfo.questions.length + 1} / ${this.deckInfo.questions.length}`}</Text>
-                    { this.questionInfo(item) }
-                    <Button block style={{ margin : 15 }} onPress={() => {
-                      this.state.answer ? this.setState({answer : false}) : this.setState({answer : true})
-                      Animated.sequence([
-                        Animated.timing(bounceValue, { duration: 200, toValue: 1.04}),
-                        Animated.spring(bounceValue, { toValue: 1, friction: 4})
-                      ]).start()
-                      }}>
-                      <Text style={{ color : '#fff' }}>{this.state.answer ? 'Question' : 'Answer' }</Text>
-                    </Button>
-                    <Button block style={{ margin : 15 }} onPress={this.correct(item, this)}>
-                      <Text style={{ color : '#fff' }}>Correct</Text>
-                    </Button>
-                    <Button block style={{ margin : 15 }} onPress={this.incorrect(item, this)}>
-                      <Text style={{ color : '#fff' }}>Incorrect</Text>
-                    </Button>
-                  </Body>
-                </CardItem>
-              </Card>
-            }/>
-        </View>
-      </Container>
+      <ScrollView>
+        <Container>
+          <View style={{ margin : 30 }}>
+            <DeckSwiper
+              onSwipeLeft={this.swipe}
+              onSwipeRight={this.swipe}
+              dataSource={this.deckInfo.questions}
+              renderItem={ item =>
+                <Card style={{elevation : 3, padding : 30}}>
+                  <CardItem cardBody>
+                    <Body style={styles.center}>
+                      <Text style={{ fontSize : 15 }}>{`Question : ${this.state.card % this.deckInfo.questions.length + 1} / ${this.deckInfo.questions.length}`}</Text>
+                      { this.showProgress() }
+                      { this.questionInfo(item) }
+                      <Button block style={{ margin : 15 }} onPress={() => {
+                        this.state.answer ? this.setState({answer : false}) : this.setState({answer : true})
+                        Animated.sequence([
+                          Animated.timing(bounceValue, { duration: 200, toValue: 1.04}),
+                          Animated.spring(bounceValue, { toValue: 1, friction: 4})
+                        ]).start()
+                        }}>
+                        <Text style={{ color : '#fff' }}>{this.state.answer ? 'Question' : 'Answer' }</Text>
+                      </Button>
+                      <Button block style={{ margin : 15 }} onPress={this.correct(item, this)}>
+                        <Text style={{ color : '#fff' }}>Correct</Text>
+                      </Button>
+                      <Button block style={{ margin : 15 }} onPress={this.incorrect(item, this)}>
+                        <Text style={{ color : '#fff' }}>Incorrect</Text>
+                      </Button>
+                      { this.showQuizResult() }
+                    </Body>
+                  </CardItem>
+                </Card>
+              }/>
+          </View>
+        </Container>
+      </ScrollView>
     )
   }
 }
