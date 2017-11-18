@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, Text, Animated, Alert, ScrollView } from 'react-native'
+import {View, Text, Animated, Alert } from 'react-native'
 import { Card, CardItem, DeckSwiper, Container, Body, Button } from 'native-base'
 import { connect } from 'react-redux'
 import styles from './styles'
@@ -40,13 +40,9 @@ class DeckQuiz extends Component {
         return
       }
       if (!container.state.attempt) container.setState({attempt : true})
-      if(question.answer.toLowerCase().includes("yes") || question.answer.toLowerCase().includes("correct")){
-        container.setState({score : container.state.score + 1})
-        alert("Good answer")
-      }else{
-        alert("Wrong answer")
-      }
+      container.setState({score : container.state.score + 1})
       question.isAnswer = true
+      container.setEnd(container)
     }
 
   }
@@ -58,13 +54,9 @@ class DeckQuiz extends Component {
         return
       }
       if (!container.state.attempt) container.setState({attempt : true})
-      if(question.answer.toLowerCase().includes("no") || question.answer.toLowerCase().includes("incorrect")){
-        container.setState({score : container.state.score + 1})
-        alert("Good answer")
-      }else{
-        alert("Wrong answer")
-      }
+      container.setState({score : container.state.score - 1})
       question.isAnswer = true
+      container.setEnd(container)
     }
   }
 
@@ -83,8 +75,17 @@ class DeckQuiz extends Component {
   swipe = () => {
     this.state.card >= this.deckInfo.length ? this.setState({card : 1}) : this.setState({card : this.state.card + 1 })
     this.setState({answer : false})
-    if (this.state.card == this.deckInfo.questions.length -1){
-      this.setState({isEnd : true, card : 0})
+  }
+
+  setEnd = (container) => {
+    let isAnswer = true
+    for (let q of this.deckInfo.questions){
+      if (q['isAnswer'] === false) {
+        isAnswer = false
+      }
+    }
+    if (container.state.card == container.deckInfo.questions.length - 1 && isAnswer){
+      container.setState({isEnd : true})
     }
   }
 
@@ -142,9 +143,8 @@ class DeckQuiz extends Component {
       )
     }
     return (
-      <ScrollView>
         <Container>
-          <View style={{ margin : 30 }}>
+          <View style={{ margin : 20 }}>
             <DeckSwiper
               onSwipeLeft={this.swipe}
               onSwipeRight={this.swipe}
@@ -178,7 +178,6 @@ class DeckQuiz extends Component {
               }/>
           </View>
         </Container>
-      </ScrollView>
     )
   }
 }
