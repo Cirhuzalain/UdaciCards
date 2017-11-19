@@ -54,7 +54,6 @@ class DeckQuiz extends Component {
         return
       }
       if (!container.state.attempt) container.setState({attempt : true})
-      container.setState({score : container.state.score - 1})
       question.isAnswer = true
       container.setEnd(container)
     }

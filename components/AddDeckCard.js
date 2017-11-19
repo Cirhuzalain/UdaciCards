@@ -28,6 +28,7 @@ class AddDeckCard extends Component {
     const answer = this.state.answer.trim()
     if (question.length < 1 || answer.length < 1){
       alert('Short question or Short Answer (> 1 character )')
+      return
     }
     const today = new Date().getDate()
     const card = {
@@ -38,7 +39,6 @@ class AddDeckCard extends Component {
 
     addCardToDeck(this.deckName, card)
     this.props.dispatch(addCard(card, this.deckName))
-
     this.props.navigation.navigate('DeckDetail', {deckName : this.deckName})
   }
 
