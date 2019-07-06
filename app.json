@@ -1,5 +1,20 @@
 {
   "expo": {
-    "sdkVersion": "22.0.0"
+    "sdkVersion": "22.0.0",
+    "orientation": "portrait",
+    "name": "UdaciCards",
+    "description": "",
+    "slug": "udacicards",
+    "version": "1.0",
+    "icon": "https://maxcdn.icons8.com/Color/PNG/512/Sports/triathlon-512.png",
+    "notification": {
+      "icon": "http://www.student-scholarships.com/images/made/img/featured/nav_basketball_45_45.png"
+    },
+    "ios": {
+     "bundleIdentifier": "com.nijus.udacifitness",
+    },
+    "android": {
+     "package": "com.nijus.udacifitness",
+    }
   }
 }
